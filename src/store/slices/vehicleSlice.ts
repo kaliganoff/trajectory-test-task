@@ -17,11 +17,15 @@ const vehiclesSlice = createSlice({
     setVehicles: (state, action: PayloadAction<Vehicle[]>) => {
       state.vehicles = action.payload;
     },
+    deleteVehicle: (state, action: PayloadAction<number>) => {
+        state.vehicles = state.vehicles.filter(vehicle => vehicle.id !== action.payload);
+      },
   },
 });
 
 export const {
   setVehicles,
+  deleteVehicle
 } = vehiclesSlice.actions;
 
 export default vehiclesSlice.reducer;

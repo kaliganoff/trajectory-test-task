@@ -3,12 +3,19 @@ import type { Vehicle } from '../types/Vehicle';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
+  onDelete: () => void;
 }
 
-const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
+const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onDelete }) => {
   return (
     <div>
-        <div>{vehicle.id} {vehicle.name} {vehicle.model}</div>
+        <div className='vehicle-card'>
+            <span>{vehicle.name}</span>
+            <span>{vehicle.model}</span> 
+            <span>{vehicle.year}</span>
+            <span>{vehicle.price}</span>
+            <button onClick={onDelete}>Удалить</button>
+        </div>
     </div>
   );
 };

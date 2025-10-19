@@ -3,7 +3,7 @@ import { useGetVehiclesQuery } from './services/vehicle';
 import './App.css';
 import VehicleCard from './components/VehicleCard';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { setVehicles } from './store/slices/vehicleSlice';
+import { setVehicles, deleteVehicle } from './store/slices/vehicleSlice';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -40,7 +40,8 @@ function App() {
 
       <main>
           <h2>Список автомобилей</h2>
-            {vehicles.map((vehicle) => <VehicleCard key={vehicle.id} vehicle={vehicle}/>)}
+            {vehicles.map((vehicle) => <VehicleCard key={vehicle.id} vehicle={vehicle} onDelete={() => dispatch(deleteVehicle(vehicle.id))}
+            />)}
       </main>
     </div>
   );
