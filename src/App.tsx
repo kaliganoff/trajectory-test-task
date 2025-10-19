@@ -3,8 +3,9 @@ import { useGetVehiclesQuery } from './services/vehicle';
 import './App.css';
 import VehicleCard from './components/VehicleCard';
 import { useAppDispatch, useAppSelector } from './store/hooks';
-import { setVehicles, deleteVehicle, setUpdatedVehicle } from './store/slices/vehicleSlice';
+import { setVehicles, deleteVehicle, setUpdatedVehicle, setIsCreating } from './store/slices/vehicleSlice';
 import { SimpleGrid } from '@chakra-ui/react';
+import Modal from './components/Modal';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -41,6 +42,7 @@ function App() {
 
       <main>
           <h2>Список автомобилей</h2>
+          <Modal text="Создать" onClick={() => dispatch(setIsCreating(true))}/>
           <SimpleGrid gap="40px">
             {vehicles.map((vehicle) => (
               <VehicleCard 
