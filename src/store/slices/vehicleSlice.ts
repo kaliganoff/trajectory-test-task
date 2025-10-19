@@ -6,12 +6,16 @@ interface VehiclesState {
     vehicles: Vehicle[];
     updatedVehicle: Vehicle | null;
     isCreating: boolean;
+    sortBy: 'year' | 'price' | null;
+    sortOrder: 'asc' | 'desc';
 }
 
 const initialState: VehiclesState = {
     vehicles: [],
     updatedVehicle: null,
     isCreating: false,
+    sortBy: null,
+    sortOrder: 'asc',
 };
 
 const vehiclesSlice = createSlice({
@@ -40,7 +44,13 @@ const vehiclesSlice = createSlice({
         },
         setIsCreating: (state, action: PayloadAction<boolean>) => {
             state.isCreating = action.payload;
-          },
+        },
+        setSortBy: (state, action: PayloadAction<'year' | 'price' | null>) => {
+            state.sortBy = action.payload;
+        },
+        setSortOrder: (state, action: PayloadAction<'asc' | 'desc'>) => {
+            state.sortOrder = action.payload;
+        },
     },
 });
 
@@ -51,6 +61,8 @@ export const {
     updateVehicle,
     createVehicle,
     setIsCreating,
+    setSortBy,
+    setSortOrder,
 } = vehiclesSlice.actions;
 
 export default vehiclesSlice.reducer;

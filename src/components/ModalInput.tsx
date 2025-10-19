@@ -8,7 +8,7 @@ interface ModalInputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const ModalInput: React.FC<ModalInputProps> = ({ label, value, onChange, type}) => {
+const ModalInput: React.FC<ModalInputProps> = ({ label, value, onChange, type }) => {
     return (
         <Field.Root>
             <Field.Label>
