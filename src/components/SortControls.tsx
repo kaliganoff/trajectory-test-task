@@ -6,26 +6,29 @@ const SortControls: React.FC = () => {
     const dispatch = useAppDispatch();
     const { sortBy, sortOrder } = useAppSelector((state) => state.vehicles);
 
-    const handleSortByChange = (value: string) => {
-        dispatch(setSortBy(value === 'none' ? null : value as 'year' | 'price'));
+    const handleSortChange = (value: string) => {
+        if (value === 'none') {
+            dispatch(setSortBy(null));
+            dispatch(setSortOrder('asc'));
+        } else {
+            const [field, order] = value.split('_');
+            dispatch(setSortBy(field as 'year' | 'price'));
+            dispatch(setSortOrder(order as 'asc' | 'desc'));
+        }
     };
 
-    const handleSortOrderChange = (value: string) => {
-        dispatch(setSortOrder(value as 'asc' | 'desc'));
+    const getCurrentValue = () => {
+        if (!sortBy) return 'none';
+        return `${sortBy}_${sortOrder}`;
     };
 
-    const sortByOptions = createListCollection({
+    const sortOptions = createListCollection({
         items: [
-            { label: "Без сортировки", value: "none" },
-            { label: "По году", value: "year" },
-            { label: "По цене", value: "price" },
-        ],
-    });
-
-    const sortOrderOptions = createListCollection({
-        items: [
-            { label: "По возрастанию", value: "asc" },
-            { label: "По убыванию", value: "desc" },
+            { label: "Нет", value: "none" },
+            { label: "Год ↑", value: "year_asc" },
+            { label: "Год ↓", value: "year_desc" },
+            { label: "Цена ↑", value: "price_asc" },
+            { label: "Цена ↓", value: "price_desc" },
         ],
     });
 
@@ -34,15 +37,15 @@ const SortControls: React.FC = () => {
             <Text fontSize="sm" fontWeight="medium">Сортировка:</Text>
             <Select.Root 
                 size="sm" 
-                width="200px"
-                value={[sortBy || 'none']}
-                onValueChange={(details) => handleSortByChange(details.value[0])}
-                collection={sortByOptions}
+                width="120px"
+                value={[getCurrentValue()]}
+                onValueChange={(details) => handleSortChange(details.value[0])}
+                collection={sortOptions}
             >
                 <Select.HiddenSelect />
                 <Select.Control>
                     <Select.Trigger cursor="pointer">
-                        <Select.ValueText placeholder="Выберите поле" />
+                        <Select.ValueText placeholder="Выберите сортировку" />
                     </Select.Trigger>
                     <Select.IndicatorGroup>
                         <Select.Indicator />
@@ -51,7 +54,7 @@ const SortControls: React.FC = () => {
                 <Portal>
                     <Select.Positioner>
                         <Select.Content>
-                            {sortByOptions.items.map((option) => (
+                            {sortOptions.items.map((option) => (
                                 <Select.Item item={option} key={option.value} cursor="pointer">
                                     {option.label}
                                     <Select.ItemIndicator />
@@ -61,37 +64,6 @@ const SortControls: React.FC = () => {
                     </Select.Positioner>
                 </Portal>
             </Select.Root>
-            {sortBy && (
-                <Select.Root 
-                    size="sm" 
-                    width="200px"
-                    value={[sortOrder]}
-                    onValueChange={(details) => handleSortOrderChange(details.value[0])}
-                    collection={sortOrderOptions}
-                >
-                    <Select.HiddenSelect />
-                    <Select.Control>
-                        <Select.Trigger cursor="pointer">
-                            <Select.ValueText placeholder="Направление" />
-                        </Select.Trigger>
-                        <Select.IndicatorGroup>
-                            <Select.Indicator />
-                        </Select.IndicatorGroup>
-                    </Select.Control>
-                    <Portal>
-                        <Select.Positioner>
-                            <Select.Content>
-                                {sortOrderOptions.items.map((option) => (
-                                    <Select.Item item={option} key={option.value} cursor="pointer">
-                                        {option.label}
-                                        <Select.ItemIndicator />
-                                    </Select.Item>
-                                ))}
-                            </Select.Content>
-                        </Select.Positioner>
-                    </Portal>
-                </Select.Root>
-            )}
         </HStack>
     );
 };

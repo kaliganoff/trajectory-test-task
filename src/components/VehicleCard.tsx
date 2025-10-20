@@ -16,8 +16,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onDelete, onEdit }) 
       <Card.Body>
         <Card.Title mb="2">{vehicle.name} {vehicle.model}</Card.Title>
         <Card.Description>
-            <p>Year: {vehicle.year}</p>
-            <p>Price: {vehicle.price}</p>
+            Year: {vehicle.year}<br/>
+            Price: {vehicle.price}
         </Card.Description>
       </Card.Body>
       <Card.Footer>

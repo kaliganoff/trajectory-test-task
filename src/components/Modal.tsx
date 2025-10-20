@@ -44,8 +44,8 @@ const Modal: React.FC<ModalProps> = ({ text, onClick }) => {
                 year: new Date().getFullYear(),
                 color: 'black',
                 price: 0,
-                latitude: 55.753332,
-                longitude: 37.621676,
+                latitude: 59.9386,
+                longitude: 30.3141,
             });
         }
     }, [updatedVehicle]);

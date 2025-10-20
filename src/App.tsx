@@ -5,6 +5,7 @@ import VehicleCard from './components/VehicleCard';
 import { useAppDispatch, useAppSelector } from './store/hooks';
 import { setVehicles, deleteVehicle, setUpdatedVehicle, setIsCreating } from './store/slices/vehicleSlice';
 import SortControls from './components/SortControls';
+import MapComponent from './components/MapComponent';
 import { SimpleGrid } from '@chakra-ui/react';
 import Modal from './components/Modal';
 
@@ -57,20 +58,29 @@ function App() {
       </header>
 
       <main>
-          <h2>Список автомобилей</h2>
-          <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <SortControls />
-            <Modal text="Создать" onClick={() => dispatch(setIsCreating(true))}/>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+          <div>
+            <h2>Карта автомобилей</h2>
+            <MapComponent />
           </div>
-          <SimpleGrid gap="40px">
-            {getSortedVehicles().map((vehicle) => (
-              <VehicleCard 
-              key={vehicle.id} 
-              vehicle={vehicle} 
-              onDelete={() => dispatch(deleteVehicle(vehicle.id))}
-              onEdit={() => dispatch(setUpdatedVehicle(vehicle))}
-            />))}
-            </SimpleGrid>
+          
+          <div style={{ flex: 1 }}>
+            <h2>Список автомобилей</h2>
+            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+              <SortControls />
+              <Modal text="Создать" onClick={() => dispatch(setIsCreating(true))}/>
+            </div>
+            <SimpleGrid gap="40px">
+              {getSortedVehicles().map((vehicle) => (
+                <VehicleCard 
+                key={vehicle.id} 
+                vehicle={vehicle} 
+                onDelete={() => dispatch(deleteVehicle(vehicle.id))}
+                onEdit={() => dispatch(setUpdatedVehicle(vehicle))}
+              />))}
+              </SimpleGrid>
+          </div>
+        </div>
       </main>
     </div>
   );
