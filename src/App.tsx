@@ -1,35 +1,89 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from 'react';
+import { useGetVehiclesQuery } from './services/vehicle';
+import './App.css';
+import VehicleCard from './components/VehicleCard';
+import { useAppDispatch, useAppSelector } from './store/hooks';
+import { setVehicles, deleteVehicle, setUpdatedVehicle, setIsCreating } from './store/slices/vehicleSlice';
+import SortControls from './components/SortControls';
+import MapComponent from './components/MapComponent';
+import { SimpleGrid } from '@chakra-ui/react';
+import Modal from './components/Modal';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useAppDispatch();
+  const { vehicles, sortBy, sortOrder } = useAppSelector((state) => state.vehicles);
+  const { data: vehiclesData, isLoading, error } = useGetVehiclesQuery();
+
+  useEffect(() => {
+       if (vehiclesData) {
+        dispatch(setVehicles(vehiclesData));
+      }
+  }, [vehiclesData, dispatch]);
+
+  const getSortedVehicles = () => {
+    if (!sortBy) return vehicles;
+    
+    return [...vehicles].sort((a, b) => {
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+      
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div>
+        <div>Загрузка автомобилей...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div>Ошибка: {JSON.stringify(error)}</div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <header>
+        <h1>Test Task</h1>
+      </header>
+
+      <main>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+          <div>
+            <h2>Карта автомобилей</h2>
+            <MapComponent />
+          </div>
+          
+          <div style={{ flex: 1 }}>
+            <h2>Список автомобилей</h2>
+            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px' }}>
+              <SortControls />
+              <Modal text="Создать" onClick={() => dispatch(setIsCreating(true))}/>
+            </div>
+            <SimpleGrid gap="40px">
+              {getSortedVehicles().map((vehicle) => (
+                <VehicleCard 
+                key={vehicle.id} 
+                vehicle={vehicle} 
+                onDelete={() => dispatch(deleteVehicle(vehicle.id))}
+                onEdit={() => dispatch(setUpdatedVehicle(vehicle))}
+              />))}
+              </SimpleGrid>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
